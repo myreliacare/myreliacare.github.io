@@ -518,21 +518,28 @@
         }
 
         @media (max-width: 768px) {
+            .progress-container {
+                padding: 25px 15px;
+            }
+
             .progress-steps {
                 overflow-x: auto;
-                justify-content: space-between;
+                justify-content: flex-start;
                 padding-bottom: 5px;
+                -webkit-overflow-scrolling: touch;
+                gap: 8px;
             }
 
             .step {
-                flex: 1;
-                min-width: 60px;
+                flex: 0 0 auto;
+                min-width: 55px;
             }
 
             .step-label {
-                font-size: 0.65em;
-                max-width: 50px;
-                line-height: 1.2;
+                font-size: 0.6em;
+                max-width: 55px;
+                line-height: 1.1;
+                word-wrap: break-word;
             }
 
             .step-circle {
@@ -768,7 +775,7 @@
                         <textarea id="accessDetails" name="accessDetails" rows="3" placeholder="Please provide specific instructions"></textarea>
                     </div>
 
-                    <div class="info-box">
+                    <div class="info-box" id="securityNote" style="display: none;">
                         <p><strong>Security Note:</strong> If you prefer not to share your access code here, you can text or call us on the day of service instead.</p>
                     </div>
 
@@ -814,12 +821,12 @@
             <p style="font-size: 1.2em; color: #C8A2A9; font-weight: 600; margin-bottom: 25px;">Thank you for choosing MyReliaCare!</p>
             <p>We've received your pet information form and will review it carefully.</p>
             <p style="margin-top: 25px; color: #C8A2A9; font-weight: 600; font-size: 1.05em;">
-                859-346-0605 | info@myreliacare.com
+                859-346-0605 | <a href="mailto:info@myreliacare.com" style="color: #C8A2A9; text-decoration: underline;">info@myreliacare.com</a>
             </p>
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         let currentStep = 1;
         const totalSteps = 5;
         let petCount = 0;
@@ -919,7 +926,7 @@
                 '</div>' +
                 '<div class="form-group">' +
                 '<label>Dietary Restrictions or Allergies</label>' +
-                '<input type="text" name="pet' + petCount + '_allergies" placeholder="e.g., No chicken, allergic to beef, grain-free only">' +
+                '<input type="text" name="pet' + petCount + '_allergies" placeholder="e.g., No chicken, grain-free">' +
                 '</div>' +
                 '<div class="form-group">' +
                 '<label>Medical History & Medications</label>' +
@@ -1039,10 +1046,13 @@
             const detailsGroup = document.getElementById('accessDetailsGroup');
             const codeLabel = document.getElementById('accessCodeLabel');
             const detailsLabel = document.getElementById('accessDetailsLabel');
+            const securityNote = document.getElementById('securityNote');
+            const codeInput = document.getElementById('accessCodeInput');
             
             if (!accessMethod) {
                 codeGroup.style.display = 'none';
                 detailsGroup.style.display = 'none';
+                securityNote.style.display = 'none';
                 return;
             }
             
@@ -1050,13 +1060,17 @@
             
             if (method === 'code' || method === 'lockbox') {
                 codeGroup.style.display = 'block';
+                securityNote.style.display = 'block';
                 if (method === 'code') {
                     codeLabel.textContent = 'Access Code';
+                    codeInput.placeholder = 'e.g., Garage code: 1234 or Door code: 5678';
                 } else if (method === 'lockbox') {
                     codeLabel.textContent = 'Lock Box Code';
+                    codeInput.placeholder = '';
                 }
             } else {
                 codeGroup.style.display = 'none';
+                securityNote.style.display = 'none';
             }
             
             if (method === 'hidden_key' || method === 'other') {
@@ -1305,13 +1319,4 @@
             })
             .catch(function(error) {
                 // Network error
-                alert('There was a problem submitting your form. Please check your internet connection and try again, or contact us directly at info@myreliacare.com or 859-346-0605');
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            });
-        });
-
-        updateProgress();
-    </script>
-</body>
-</html>
+                alert('There was a problem submitting your form. Please check your internet connection and try again, or contact us dire
